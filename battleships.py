@@ -1,13 +1,12 @@
 """
 Battleships game
 
-Matt Cotton
+Authors:  Matt Cotton
+Credits:  http://www.datagenetics.com/blog/december32011/
 September 2019
 """
 
-import random
-import statistics
-import csv
+from random import randint, choice
 
 STD_SHIPS = [5, 4, 3, 3, 2]
 
@@ -113,7 +112,7 @@ class Board:
     def get_ship_cells(self, length, start_pos, orientation):
         # Calculate cell positions the ship will occupy
         positions = []
-        if orientation == "h" or orientation == "v":
+        if orientation in ("h", "v"):
             for i in range(length):
                 row_pos = start_pos.x + (i * (orientation == "v"))
                 col_pos = start_pos.y + (i * (orientation == "h"))
@@ -159,9 +158,9 @@ class Board:
         ships = sorted(ships, reverse=True)
         for ship_size in ships:
             while True:
-                orientation = random.choice(["h", "v"])
-                x = random.randint(0, self.size - 1)
-                y = random.randint(0, self.size - 1)
+                orientation = choice(["h", "v"])
+                x = randint(0, self.size - 1)
+                y = randint(0, self.size - 1)
                 pos = Pos(x, y)
                 if self.place_ship(ship_size, pos, orientation):
                     break
@@ -177,7 +176,7 @@ class Board:
                 # Get horz/vert selection
                 while True:
                     orientation = input("Placing a ship of length %d. Horizontal or vertical? (h/v): " % ship_size)
-                    if orientation == "h" or orientation == "v":
+                    if orientation.lower in ("h", "v"):
                         break
                     else:
                         print("Invalid input, try again.")
@@ -242,8 +241,8 @@ class Board:
             print("Invalid guess, try again.")
 
     def get_random_pos(self):
-        x = random.randint(0, self.size - 1)
-        y = random.randint(0, self.size - 1)
+        x = randint(0, self.size - 1)
+        y = randint(0, self.size - 1)
         return Pos(x, y)
 
     def draw_board(self, show_boats):

@@ -6,7 +6,7 @@ def probabilistic_guessing(size, ships, print_output):
 
     while not board.game_over:
         if print_output:
-            board.draw_board(True)
+            board.draw_board(False)
 
         # Reset all cell prob's to 0
         for col in range(size):

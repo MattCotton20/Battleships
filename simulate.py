@@ -3,36 +3,57 @@ from random_guessing import *
 from search_guessing import *
 from probabilistic_guessing import *
 
+from statistics import mean, stdev
 
-def simulate_random(games):
+
+def simulate_battleships():
+
+    while True:
+        method = input("Select guessing method: random (r), search (s), probabilistic (p): ").lower()
+        if method == "r":
+            guess_function = random_guessing
+            break
+        elif method == "s":
+            guess_function = search_target_guessing
+            break
+        elif method == "p":
+            guess_function = probabilistic_guessing
+            break
+        else:
+            print("Invalid input, try again.")
+
+    while True:
+        num_of_sims = input("Enter number of simulations: ")
+        if num_of_sims.isdigit() and int(num_of_sims) > 0:
+            num_of_sims = int(num_of_sims)
+            break
+        else:
+            print("Invalid input, try again.")
+
+    while True:
+        csv_out = input("Output to csv? (y/n): ").lower()
+        if csv_out in ("y", "n"):
+            break
+        else:
+            print("Invalid input, try again.")
+
+    print("Starting simulation...")
+
     guesses = []
-    f = open('csvfile_random.csv', 'w')
-    for game in range(games):
-        guesses.append(random_guessing(10, STD_SHIPS))
-        f.write("%d\n" % guesses[game])
+    for sim in range(num_of_sims):
+        guesses.append(guess_function(10, STD_SHIPS, False))
 
-    f.close()
+    print("Complete!")
+    print("Mean: %d, StDev: %f, Min: %d, Max %d" % (mean(guesses), stdev(guesses), min(guesses), max(guesses)))
 
-
-def simulate_search(games):
-    guesses = []
-    f = open('csvfile_search.csv', 'w')
-    for game in range(games):
-        guesses.append(search_target_guessing(10, STD_SHIPS))
-        f.write("%d\n" % guesses[game])
-
-    f.close()
-
-
-def simulate_probabilistic(games):
-    guesses = []
-    f = open('csvfile_prob.csv', 'w')
-    for game in range(games):
-        guesses.append(probabilistic_guessing(10, STD_SHIPS))
-        f.write("%d\n" % guesses[game])
-
-    f.close()
+    # Generate CSV file
+    if csv_out == "y":
+        csv_file = open("battleships_CSV.csv", "w")
+        for guess in guesses:
+            csv_file.write("%d\n" % guess)
+        csv_file.close()
+        print("Data saved as 'battleships_CSV.csv'")
 
 
 if __name__ == '__main__':
-    simulate_probabilistic(1000)
+    simulate_battleships()
